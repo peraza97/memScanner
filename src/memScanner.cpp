@@ -127,7 +127,7 @@ void optionHandler(int option, pid_t pid, address_t start, address_t end, contai
 int main(){
 
     container_t * mySet = new container_t;
-    pid_t pid = 80798;
+    pid_t pid = -1;
     string startAdd = "0x0000000000000000";
     string endAdd   = "0x00007fffffffffff";
 
@@ -138,6 +138,8 @@ int main(){
     char targetChar = '$';
     string targetString = "Hello world";
 
+    printf("Enter process pid: ");
+    cin >> pid;
     int option = 6;
     while(option!= 0){
         printMenu();
