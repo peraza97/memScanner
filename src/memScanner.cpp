@@ -75,15 +75,15 @@ void updateAddress(pid_t pid, container_t * mySet, string targetString){
     case 2:
         cin >> newChar;
         writeData(pid, addr, newChar);
+        break;
     case 3:
         cin.ignore();
+        getline(cin, newString);
         writeString(pid, addr, newString, targetString.size()+1);
         break;
     default:
         break;
     }
-
-
 }
 
 void optionHandler(int option, pid_t pid, address_t start, address_t end, container_t * mySet, int & targetInt, char & targetChar, string & targetString){
@@ -101,7 +101,7 @@ void optionHandler(int option, pid_t pid, address_t start, address_t end, contai
         scanForData(pid, start, end, NUM_BYTES, targetChar, mySet);
         break;
     case 5:
-        printf("TODO\n");
+        scanForString(pid, start, end, NUM_BYTES, targetString, mySet);
         break;
     case 6:
         printf("Enter new value for Int: ");
@@ -112,7 +112,7 @@ void optionHandler(int option, pid_t pid, address_t start, address_t end, contai
         cin >> targetChar;
         break;
     case 8:
-        printf("Enter new value for Char: ");
+        printf("Enter new value for String: ");
         cin.ignore();
         getline(cin, targetString);
         break;
@@ -127,7 +127,7 @@ void optionHandler(int option, pid_t pid, address_t start, address_t end, contai
 int main(){
 
     container_t * mySet = new container_t;
-    pid_t pid = 55254;
+    pid_t pid = 80798;
     string startAdd = "0x0000000000000000";
     string endAdd   = "0x00007fffffffffff";
 
@@ -135,7 +135,7 @@ int main(){
     address_t end = (address_t)strtol(endAdd.c_str(), NULL, 0);
 
     int targetInt = 100;
-    char targetChar = '5';
+    char targetChar = '$';
     string targetString = "Hello world";
 
     int option = 6;

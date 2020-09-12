@@ -27,7 +27,7 @@ bool success(ssize_t nread){
               printf("ERROR: INVALID ARGUMENTS.\n");
               break;
             case EFAULT:
-              printf("ERROR: UNABLE TO ACCESS TARGET MEMORY ADDRESS.\n");
+              //printf("ERROR: UNABLE TO ACCESS TARGET MEMORY ADDRESS.\n");
               break;
             case ENOMEM:
               printf("ERROR: UNABLE TO ALLOCATE MEMORY.\n");
@@ -86,6 +86,37 @@ void scanForData(pid_t pid, address_t start, address_t end, uint64_t bytes, T ta
         for(container_t::iterator it = mySet->begin(); it != mySet->end();){
             T* ptr = (T*)readProcessChunk(pid, *it, 4);
             if((ptr!=NULL) && (*ptr != targetVal)){
+                mySet->erase(it);
+            }
+            else{
+                ++it;
+            }
+        }
+    }
+    cout << "There are " << mySet->size() << " addresses with this value" << endl;
+}
+
+void scanForString(pid_t pid, address_t start, address_t end, uint64_t bytes, string targetVal, container_t * mySet){
+    cout << "Scanning for target: " << targetVal << endl;
+    if(mySet->size() == 0){ //no starting point, so scan all address space
+        for(start; start <= end; start += bytes){
+            address_t ptr = (address_t)readProcessChunk(pid, start, bytes);
+            if(ptr != NULL){ //verify that we were able to get this memory
+                for(address_t tmp = ptr; tmp <= ptr + bytes; tmp += sizeof(char)){
+                    char * tempString = (char*)tmp;
+                    if(strcmp(tempString, targetVal.c_str()) == 0){
+                        long diff = tmp - ptr;
+                        mySet->push_back(start + diff);
+                    }
+                }
+                delete[] ptr;
+            }
+        }
+    }
+    else{ //only check known addresses
+        for(container_t::iterator it = mySet->begin(); it != mySet->end();){
+            char * ptr = (char*)readProcessChunk(pid, *it, targetVal.size()+1);
+            if((ptr!=NULL) && (strcmp(ptr, targetVal.c_str()) != 0)){
                 mySet->erase(it);
             }
             else{
