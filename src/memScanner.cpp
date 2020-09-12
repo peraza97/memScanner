@@ -44,42 +44,40 @@ void clearSet(container_t * mySet){
     printf("cleared Container\n");
 }
 
-int getSetIndex(container_t * mySet){
+address_t getSetAddress(container_t * mySet){
     printAddressSet(mySet);
     int index;
     printf("Enter address index: ");
     cin >> index;
-
-    return index;
+    container_t::iterator addr = mySet->begin() + index;
+    return *addr;
 }
 
-
-void updateAddress(pid_t pid, container_t * mySet){
+void updateAddress(pid_t pid, container_t * mySet, string targetString){
     if(mySet->size() == 0){
         return;
     }
-
-
-    int newInt;
-    char newChar;
-
-    int option;
-
-
-    container_t::iterator addr = mySet->begin() + getSetIndex(mySet);
+    
+    address_t addr = getSetAddress(mySet);
 
     printf("1)int\n2)char\n3)string\nEnter Datatype to write: ");
+    int option;
+    int newInt;
+    char newChar;
+    string newString;
     cin >> option;
-    printf("Enter new value: ");
-    cin.ignore();
+    printf("Enter New value: ");
     switch (option){
     case 1:
         cin >> newInt;
-        writeData(pid, *addr, newInt);
+        writeData(pid, addr, newInt);
         break;
     case 2:
         cin >> newChar;
-        writeData(pid, *addr, newChar);
+        writeData(pid, addr, newChar);
+    case 3:
+        cin.ignore();
+        writeString(pid, addr, newString, targetString.size()+1);
         break;
     default:
         break;
@@ -119,7 +117,7 @@ void optionHandler(int option, pid_t pid, address_t start, address_t end, contai
         getline(cin, targetString);
         break;
     case 9:
-        updateAddress(pid, mySet);
+        updateAddress(pid, mySet, targetString);
         break;
     default:
         break;
