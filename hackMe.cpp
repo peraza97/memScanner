@@ -1,21 +1,18 @@
-#include <iostream>
+#include <stdio.h>
 #include <sys/types.h>
 #include <unistd.h>
 
-pid_t getpid(void);
-using namespace std;
+int main(int argc, char ** argv){
 
-
-int main(){
-
-    cout << "PID: " << getpid() << endl;
+    printf("PID: %d\n",getpid());
 
     int health = 100;
     char letter = '$';
-    char str[] = "Hello world";
+    char *str = new char[100];
+    str[0]='l';str[1]='o';str[2]='v';str[3]='e';str[4]='\0';
     
-    cout << (void *)&health << ": " << health << endl;
-    cout << (void *)&letter << ": " << letter << endl;    
+    printf("%p: %d\n", &health, health);
+    printf("%p: %c\n", &letter, letter); 
     printf("%p: %s\n", &str, str); 
 
     int pressed = 1;
@@ -36,11 +33,13 @@ int main(){
                 scanf(" %c", &letter);
                 break;
             case 4:
+                printf("enter new value for str: ");
+                scanf("%*c%[^\n]s", str);
                 break;
             case 5:
                 printf("health: %p\nletter: %p\nstr: %p\n", &health, &letter, str);
                 break;
         }
     }
-
+    return 0;
 }
