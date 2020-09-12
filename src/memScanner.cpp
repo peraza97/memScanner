@@ -128,11 +128,8 @@ int main(){
 
     container_t * mySet = new container_t;
     pid_t pid = -1;
-    string startAdd = "0x0000000000000000";
-    string endAdd   = "0x00007fffffffffff";
-
-    address_t start = (address_t)strtol(startAdd.c_str(), NULL, 0);
-    address_t end = (address_t)strtol(endAdd.c_str(), NULL, 0);
+    address_t start = (address_t)0x0000000000000000;
+    address_t end   = (address_t)0x00007fffffffffff;
 
     int targetInt = 100;
     char targetChar = '$';
@@ -147,11 +144,4 @@ int main(){
         printf("\n");
         optionHandler(option, pid, start, end, mySet, targetInt, targetChar, targetString);
     }
-
-   /*
-    pid_t pid = 74538;
-    string addr = "0x7ffe6801c54c";
-    address_t addr3 = (address_t)strtol(addr.c_str(), NULL, 0);
-    writeString(pid, addr3, "love", 12);
-    */
 }
