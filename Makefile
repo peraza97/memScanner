@@ -21,3 +21,6 @@ $(OBJ_DIR):
 
 clean: 
 	$(RM) ./$(OBJ_DIR)/*
+
+run: 
+	sudo ./$(OBJ_DIR)/$(PROJ_NAME)

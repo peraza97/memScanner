@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <cstring>
 #include <sys/types.h>
 #include <unistd.h>
 
@@ -8,12 +9,13 @@ int main(int argc, char ** argv){
 
     int health = 100;
     char letter = '$';
-    char *str = new char[100];
-    str[0]='l';str[1]='o';str[2]='v';str[3]='e';str[4]='\0';
+    char * str = new char[100];
+    strcpy(str, "love");
     
     printf("%p: %d\n", &health, health);
     printf("%p: %c\n", &letter, letter); 
     printf("%p: %s\n", &str, str); 
+    printf("str points to %p:\n", str); 
 
     int pressed = 1;
     while(pressed != 0){

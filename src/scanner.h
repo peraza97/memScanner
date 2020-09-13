@@ -18,7 +18,7 @@ typedef vector<address_t> container_t;
 #define MB 1048576
 #define GB 1073741824 
 
-#define NUM_BYTES 8 * MB
+#define NUM_BYTES 4 * MB
 
 bool success(ssize_t nread){
     if (nread < 0) {
@@ -27,7 +27,7 @@ bool success(ssize_t nread){
               printf("ERROR: INVALID ARGUMENTS.\n");
               break;
             case EFAULT:
-              //printf("ERROR: UNABLE TO ACCESS TARGET MEMORY ADDRESS.\n");
+              printf("ERROR: UNABLE TO ACCESS TARGET MEMORY ADDRESS.\n");
               break;
             case ENOMEM:
               printf("ERROR: UNABLE TO ALLOCATE MEMORY.\n");
@@ -97,15 +97,15 @@ void scanForData(pid_t pid, address_t start, address_t end, uint64_t bytes, T ta
 }
 
 void scanForString(pid_t pid, address_t start, address_t end, uint64_t bytes, string targetVal, container_t * mySet){
-    cout << "Scanning for target: " << targetVal << endl;
+    cout << "Scanning for target: " << targetVal.c_str() << endl;
     if(mySet->size() == 0){ //no starting point, so scan all address space
         for(start; start <= end; start += bytes){
             address_t ptr = (address_t)readProcessChunk(pid, start, bytes);
             if(ptr != NULL){ //verify that we were able to get this memory
-                for(address_t tmp = ptr; tmp <= ptr + bytes; tmp += sizeof(char)){
-                    char * tempString = (char*)tmp;
+                for(char * tempString = (char*)ptr; (address_t)tempString <= ptr + bytes; tempString += 1){
                     if(strcmp(tempString, targetVal.c_str()) == 0){
-                        long diff = tmp - ptr;
+                        cout << "HERE" << endl;
+                        long diff = (address_t)tempString - ptr;
                         mySet->push_back(start + diff);
                     }
                 }
