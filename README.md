@@ -9,6 +9,8 @@ Currently this works on data types
 - int
 - char
 
+Note: This should also work on datatypes with == operator defined
+
 ## Installation
 
 To compile the project, run the following command in the top level directory
