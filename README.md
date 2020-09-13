@@ -24,15 +24,15 @@ g++ hackMe.cpp
 run the following command in the top level directory
 In a separate terminal run the following command in the top level directory
 ```sh
-$sudo ./a.out
+$./a.out
 ```
 
 In a separate terminal run the following command in the top level directory
 ```sh
-$sudo ./build/memScanner
+$make run
 ```
 
 ## To Do
 - Update memory scan for strings in the case only part of the string is grabbed
 - Update memory scan to handle more data types
-- Work on making this robust, variables in the heap do not seem to be found when scanned
+- Make chunk size modular. Depending on chunk size, value may not be found
