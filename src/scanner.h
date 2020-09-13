@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
-#include <set>
+#include <cstring>
 #include <vector>
 #include <iostream>
 
@@ -47,7 +47,6 @@ bool success(ssize_t nread){
     return true;
 }
 
-//READ X bytes from remote process
 void * readProcessChunk(pid_t pid, address_t addr, uint64_t bytes){
     struct iovec local_iov[1];
     local_iov[0].iov_base = new uint8_t[bytes];
@@ -63,17 +62,47 @@ void * readProcessChunk(pid_t pid, address_t addr, uint64_t bytes){
     return local_iov[0].iov_base;
 }
 
-//Template for scanning data types
+template <typename T>
+int iterateData(T data){
+    return sizeof(data);
+}
+
+template<>
+int iterateData<string>(string data){
+    return 1;
+}
+
+template <typename T>
+int sizeofData(T data){
+    return sizeof(data);
+}
+
+template<>
+int sizeofData<string>(string data){
+    return data.size()+1;
+}
+
+template <typename T>
+bool compareData(address_t ptr, T targetVal){
+    T tempVal = *(T*)ptr;
+    return tempVal == targetVal;
+}
+
+//specific to string
+template<>
+bool compareData<string>(address_t ptr, string targetVal){
+    return strcmp((char*)ptr, targetVal.c_str()) == 0;
+}
+
 template <typename T>
 void scanForData(pid_t pid, address_t start, address_t end, uint64_t bytes, T targetVal, container_t * mySet){
     cout << "Scanning for target: " << targetVal << endl;
-    if(mySet->size() == 0){ //no starting point, so scan all address space
+    if(mySet->size() == 0){ 
         for(start; start <= end; start += bytes){
             address_t ptr = (address_t)readProcessChunk(pid, start, bytes);
-            if(ptr != NULL){ //verify that we were able to get this memory
-                for(address_t tmp = ptr; tmp <= ptr + bytes; tmp += sizeof(T)){
-                    T tempVal = *(T*)tmp;
-                    if(tempVal == targetVal){
+            if(ptr != NULL){
+                for(address_t tmp = ptr; tmp <= ptr + bytes; tmp += iterateData(targetVal)){
+                    if(compareData(tmp, targetVal)){
                         long diff = tmp - ptr;
                         mySet->push_back(start + diff);
                     }
@@ -84,39 +113,8 @@ void scanForData(pid_t pid, address_t start, address_t end, uint64_t bytes, T ta
     }
     else{ //only check known addresses
         for(container_t::iterator it = mySet->begin(); it != mySet->end();){
-            T* ptr = (T*)readProcessChunk(pid, *it, 4);
-            if((ptr!=NULL) && (*ptr != targetVal)){
-                mySet->erase(it);
-            }
-            else{
-                ++it;
-            }
-        }
-    }
-    cout << "There are " << mySet->size() << " addresses with this value" << endl;
-}
-
-void scanForString(pid_t pid, address_t start, address_t end, uint64_t bytes, string targetVal, container_t * mySet){
-    cout << "Scanning for target: " << targetVal.c_str() << endl;
-    if(mySet->size() == 0){ //no starting point, so scan all address space
-        for(start; start <= end; start += bytes){
-            address_t ptr = (address_t)readProcessChunk(pid, start, bytes);
-            if(ptr != NULL){ //verify that we were able to get this memory
-                for(char * tempString = (char*)ptr; (address_t)tempString <= ptr + bytes; tempString += 1){
-                    if(strcmp(tempString, targetVal.c_str()) == 0){
-                        cout << "HERE" << endl;
-                        long diff = (address_t)tempString - ptr;
-                        mySet->push_back(start + diff);
-                    }
-                }
-                delete[] ptr;
-            }
-        }
-    }
-    else{ //only check known addresses
-        for(container_t::iterator it = mySet->begin(); it != mySet->end();){
-            char * ptr = (char*)readProcessChunk(pid, *it, targetVal.size()+1);
-            if((ptr!=NULL) && (strcmp(ptr, targetVal.c_str()) != 0)){
+            address_t ptr = (address_t)readProcessChunk(pid, *it, sizeofData(targetVal));
+            if((ptr!=NULL) && (!compareData(ptr, targetVal))){
                 mySet->erase(it);
             }
             else{
@@ -141,18 +139,18 @@ void writeData(pid_t pid, address_t addr, T targetVal){
     ssize_t nread = process_vm_writev(pid, local_iov, 1, remote_iov, 1, 0);
 }
 
-void writeString(pid_t pid, address_t addr, string targetVal, int prevSize){
+template <>
+void writeData<string>(pid_t pid, address_t addr, string targetVal){
     struct iovec local_iov[1];
-
-    char * newStr = new char[prevSize];
+    char * newStr = new char[targetVal.size()+1];
     strcpy(newStr, targetVal.c_str());
 
     local_iov[0].iov_base = newStr;
-    local_iov[0].iov_len = prevSize;
+    local_iov[0].iov_len = targetVal.size()+1;
 
     struct iovec remote_iov[1];
     remote_iov[0].iov_base = addr;
-    remote_iov[0].iov_len = prevSize;
+    remote_iov[0].iov_len = targetVal.size()+1;
     ssize_t nread = process_vm_writev(pid, local_iov, 1, remote_iov, 1, 0);
     delete[] newStr;
 }

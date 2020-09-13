@@ -1,9 +1,6 @@
 #include <sys/uio.h>
 #include <stdio.h>
-#include <cstring>
 #include <stdlib.h>
-#include <errno.h>
-#include <set>
 #include <vector>
 #include <iostream>
 
@@ -79,7 +76,7 @@ void updateAddress(pid_t pid, container_t * mySet, string targetString){
     case 3:
         cin.ignore();
         getline(cin, newString);
-        writeString(pid, addr, newString, targetString.size()+1);
+        writeData(pid, addr, newString);
         break;
     default:
         break;
@@ -101,7 +98,7 @@ void optionHandler(int option, pid_t pid, address_t start, address_t end, contai
         scanForData(pid, start, end, NUM_BYTES, targetChar, mySet);
         break;
     case 5:
-        scanForString(pid, start, end, NUM_BYTES, targetString, mySet);
+        scanForData(pid, start, end, NUM_BYTES, targetString, mySet);
         break;
     case 6:
         printf("Enter new value for Int: ");
@@ -137,14 +134,12 @@ int main(){
 
     printf("Enter process pid: ");
     cin >> pid;
-    void * addr = readProcessChunk(pid,(address_t)0x7ffcabbb4280, sizeof(void*));
+    void * addr = readProcessChunk(pid,(address_t)0x7fff1d30a8f0, sizeof(void*));
     uint64_t val = *(uint64_t*)(addr);
     printf("%p\n", val);
     addr = readProcessChunk(pid,(address_t)val, 8); //read the pointer
-    writeString(pid, (address_t)val, "hello", 10);
-
-
-    //writeString(pid, (address_t)addr, "hi", 100);
+    string str = "hello";
+    writeData(pid, (address_t)val, str);
     
     /*
     int option = 6;
