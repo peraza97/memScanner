@@ -134,14 +134,7 @@ int main(){
 
     printf("Enter process pid: ");
     cin >> pid;
-    void * addr = readProcessChunk(pid,(address_t)0x7fff1d30a8f0, sizeof(void*));
-    uint64_t val = *(uint64_t*)(addr);
-    printf("%p\n", val);
-    addr = readProcessChunk(pid,(address_t)val, 8); //read the pointer
-    string str = "hello";
-    writeData(pid, (address_t)val, str);
-    
-    /*
+
     int option = 6;
     while(option!= 0){
         printMenu();
@@ -149,5 +142,5 @@ int main(){
         printf("\n");
         optionHandler(option, pid, start, end, mySet, targetInt, targetChar, targetString);
     }
-    */
+    
 }

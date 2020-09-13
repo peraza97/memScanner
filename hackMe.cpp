@@ -9,13 +9,14 @@ int main(int argc, char ** argv){
 
     int health = 100;
     char letter = '$';
-    char * str = new char[100];
-    strcpy(str, "love");
+    char stackStr[] = "Dummy";
+    char * heapStr = new char[100];
+    strcpy(heapStr, "love");
     
     printf("%p: %d\n", &health, health);
     printf("%p: %c\n", &letter, letter); 
-    printf("%p: %s\n", &str, str); 
-    printf("str points to %p:\n", str); 
+    printf("%p: %s\n", &stackStr, stackStr); 
+    printf("%p: %s\n", heapStr, heapStr); 
 
     int pressed = 1;
     while(pressed != 0){
@@ -24,7 +25,7 @@ int main(int argc, char ** argv){
         printf("--------------------\n");
         switch (pressed){
             case 1:
-                printf("health: %d\nletter: %c\nstr: %s\n", health, letter, str);
+                printf("health: %d\nletter: %c\nstackStr: %s\nheapStr: %s\n", health, letter, stackStr, heapStr);
                 break;
             case 2:
                 printf("enter new value for health: ");
@@ -35,11 +36,11 @@ int main(int argc, char ** argv){
                 scanf(" %c", &letter);
                 break;
             case 4:
-                printf("enter new value for str: ");
-                scanf("%*c%[^\n]s", str);
+                printf("enter new value for heapStr: ");
+                scanf("%*c%[^\n]s", heapStr);
                 break;
             case 5:
-                printf("health: %p\nletter: %p\nstr: %p\n", &health, &letter, str);
+                printf("health: %p\nletter: %p\nstackStr: %p\nheapStr: %p\n", &health, &letter, &stackStr, heapStr);
                 break;
         }
     }

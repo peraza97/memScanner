@@ -18,7 +18,7 @@ typedef vector<address_t> container_t;
 #define MB 1048576
 #define GB 1073741824 
 
-#define NUM_BYTES 4 * MB
+#define NUM_BYTES 1 * MB
 
 bool success(ssize_t nread){
     if (nread < 0) {
@@ -27,7 +27,7 @@ bool success(ssize_t nread){
               printf("ERROR: INVALID ARGUMENTS.\n");
               break;
             case EFAULT:
-              printf("ERROR: UNABLE TO ACCESS TARGET MEMORY ADDRESS.\n");
+              //printf("ERROR: UNABLE TO ACCESS TARGET MEMORY ADDRESS.\n");
               break;
             case ENOMEM:
               printf("ERROR: UNABLE TO ALLOCATE MEMORY.\n");
@@ -114,7 +114,7 @@ void scanForData(pid_t pid, address_t start, address_t end, uint64_t bytes, T ta
     else{ //only check known addresses
         for(container_t::iterator it = mySet->begin(); it != mySet->end();){
             address_t ptr = (address_t)readProcessChunk(pid, *it, sizeofData(targetVal));
-            if((ptr!=NULL) && (!compareData(ptr, targetVal))){
+            if((ptr!=NULL) && !(compareData(ptr, targetVal))){
                 mySet->erase(it);
             }
             else{

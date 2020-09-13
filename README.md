@@ -5,7 +5,7 @@ Given a target Valiue, it scans the address space for matching values, storing t
 multiple passes are needed to narrow down the results. Once an address is found, the contents of the address can be modified to your liking.
 
 Currently this works on data types
-- char *
+- string
 - int
 - char
 
@@ -35,3 +35,4 @@ $sudo ./build/memScanner
 ## To Do
 - Update memory scan for strings in the case only part of the string is grabbed
 - Update memory scan to handle more data types
+- Work on making this robust, variables in the heap do not seem to be found when scanned
