@@ -9,14 +9,9 @@ int main(int argc, char ** argv){
 
     int health = 100;
     char letter = '$';
-    char stackStr[] = "Dummy";
+    char stackStr[] = "Hack this stack string";
     char * heapStr = new char[100];
-    strcpy(heapStr, "love");
-    
-    printf("%p: %d\n", &health, health);
-    printf("%p: %c\n", &letter, letter); 
-    printf("%p: %s\n", &stackStr, stackStr); 
-    printf("%p: %s\n", heapStr, heapStr); 
+    strcpy(heapStr, "Hack this heap string");
 
     int pressed = 1;
     while(pressed != 0){
