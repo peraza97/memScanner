@@ -15,12 +15,12 @@ int main(int argc, char ** argv){
 
     int pressed = 1;
     while(pressed != 0){
-        printf("\n0) Quit\n1) Print all variables\n2) Edit health\n3) Edit letter\n4) Edit string\n5) Print addresses\nEnter Option: ");
+        printf("\n0) Quit\n1) Print all variables\n2) Edit health\n3) Edit letter\n4) Edit heap string\n5) Print addresses\nEnter Option: ");
         scanf("%d", &pressed);
         printf("--------------------\n");
         switch (pressed){
             case 1:
-                printf("health: %d\nletter: %c\nstackStr: %s\nheapStr: %s\n", health, letter, stackStr, heapStr);
+                printf("pid: %d\nhealth: %d\nletter: %c\nstackStr: %s\nheapStr: %s\n", getpid(), health, letter, stackStr, heapStr);
                 break;
             case 2:
                 printf("enter new value for health: ");
