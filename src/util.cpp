@@ -15,6 +15,14 @@ bool compareData<string>(address_t ptr, string targetVal){
     return strcmp((char*)ptr, targetVal.c_str()) == 0;
 }
 
+template<>
+void editData<string>(string & targetVal){
+    printf("New value: \n");
+    cin.ignore();
+    getline(cin, targetVal); 
+}
+
+
 bool success(ssize_t nread){
     if (nread < 0) {
         switch (errno) {

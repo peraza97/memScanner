@@ -8,11 +8,10 @@ void printMenu(){
     printf("1) Print Addresses\n");
     printf("2) Clear Addresses\n");
     printf("3) Scan memory\n");
-    printf("4) Change Data type\n");
-    printf("5) Update value to search for\n");
-    printf("6) Write Value\n");
-    printf("7) Change chunk size\n");
-    printf("8) Print Info\n");
+    printf("4) Update value to search for\n");
+    printf("5) Write Value\n");
+    printf("6) Change chunk size\n");
+    printf("7) Print Info\n");
     printf("Enter Option: ");
 }
 
@@ -22,7 +21,7 @@ int main(){
     printf("Enter process pid: ");
     cin >> pid;
     
-    MemoryScanner myScanner(pid, (address_t)0x0000000000000000, (address_t)0x00007fffffffffff);
+    MemoryScanner<int> myScanner(pid, (address_t)0x0000000000000000, (address_t)0x00007fffffffffff);
     myScanner.printInfo();
 
     int choice;
@@ -43,18 +42,15 @@ int main(){
                 myScanner.scanMemory();
                 break;
             case 4:
-                myScanner.changeDataType();
-                break;
-            case 5:
                 myScanner.changetargetValue();
                 break;
-            case 6:
+            case 5:
                 myScanner.writeMemory();
                 break;
-            case 7:
+            case 6:
                 myScanner.changeNumBytes();
                 break;
-            case 8:
+            case 7:
                 myScanner.printInfo();
                 break;
             default:

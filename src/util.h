@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <cstring>
+#include <iostream>
 
 using namespace std;
 
@@ -37,6 +38,16 @@ bool compareData(address_t ptr, T targetVal){
 //specific to string
 template<>
 bool compareData<string>(address_t ptr, string targetVal);
+
+template <typename T>
+void editData(T & targetVal){
+    printf("New value: ");
+    cin >> targetVal;
+}
+
+//specific to string
+template<>
+void editData<string>(string & targetVal);
 
 bool success(ssize_t nread);
 
