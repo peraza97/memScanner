@@ -11,7 +11,6 @@
 #include <iostream>
 #include <inttypes.h>
 
-
 #include "util.h"
 
 using namespace std;
@@ -59,6 +58,7 @@ template <class myType>
 MemoryScanner<myType>::MemoryScanner(pid_t pid, address_t start, address_t end){
     this->running = true;
     this->container = new container_t;
+    editData(this->targetData);
     this->numBytesStr = "1MB";
     this->numBtyes = this->convertSizeInput(this->numBytesStr);
 
@@ -73,10 +73,10 @@ void MemoryScanner<myType>::printInfo(){
     printf("PID: %d\n", this->pid);
     printf("start address:%p\n", this->startAddress);
     printf("end address:%p\n", this->endAddress);
-    printf("Chunk size: %s(%" PRIu64 ")\n", this->numBytesStr.c_str(), this->numBtyes);  
-    cout << "Data: " << this->targetData << endl;
-    printf("----------------\n");
-
+    printf("Chunk size: ~%s(%" PRIu64 ")\n", this->numBytesStr.c_str(), this->numBtyes);  
+    cout << "Data: (" << this->targetData <<")" << endl;
+    cout << "size of data: " << sizeofData(this->targetData) << endl;
+    cout << "iterate size: " << iterateData(this->targetData) << endl;
 }
 
 template <class myType>
@@ -101,11 +101,11 @@ void MemoryScanner<myType>::printContainer(){
         printf("Container is empty\n");
         return;
     }
-    printf("---------------\n");
+    printf("-------------------------------\n");
     for(container_t::iterator it = this->container->begin(); it != this->container->end(); ++it){
         printf("%d) %p\n", count++, *it);
     }
-    printf("---------------\n");
+    printf("-------------------------------\n");
 }
 
 template <class myType>
@@ -115,7 +115,9 @@ address_t MemoryScanner<myType>::getContainerIndex(){
     printf("Enter address index: ");
     cin >> index;
     container_t::iterator addr = this->container->begin() + index;
-    return *addr;
+    address_t returnAddr = *addr;
+    this->container->erase(addr);
+    return returnAddr;
 }
 
 template <class myType>
@@ -148,7 +150,8 @@ uint64_t MemoryScanner<myType>::convertSizeInput(string input){
     else{
         return 0;
     }
-    return (uint64_t)pow(2, bits);
+    uint64_t size = (uint64_t)pow(2, bits);
+    return int(size/sizeofData(this->targetData)) * sizeofData(this->targetData); //round to get correct sizing
 }
 
 template <class myType>
@@ -250,7 +253,6 @@ void MemoryScanner<string>::writeData(pid_t pid, address_t addr, string targetVa
 
 template<class myType>
 void MemoryScanner<myType>::writeMemory(){
-
     if(this->container->size() == 0){
         return;
     }

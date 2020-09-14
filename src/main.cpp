@@ -21,7 +21,7 @@ int main(){
     printf("Enter process pid: ");
     cin >> pid;
     
-    MemoryScanner<int> myScanner(pid, (address_t)0x0000000000000000, (address_t)0x00007fffffffffff);
+    MemoryScanner<string> myScanner(pid, (address_t)0x0000000000000000, (address_t)0x00007fffffffffff);
     myScanner.printInfo();
 
     int choice;

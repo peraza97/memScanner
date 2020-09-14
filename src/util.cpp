@@ -17,7 +17,7 @@ bool compareData<string>(address_t ptr, string targetVal){
 
 template<>
 void editData<string>(string & targetVal){
-    printf("New value: \n");
+    printf("New value: ");
     cin.ignore();
     getline(cin, targetVal); 
 }
